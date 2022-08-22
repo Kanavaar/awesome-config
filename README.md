@@ -8,5 +8,4 @@ config of awesome
 
 rofi
 alacritty
-archlinux-logout
-pcmanfm
+JetBrains Mono

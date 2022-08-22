@@ -1,16 +1,7 @@
 -- If LuaRocks is installed, make sure that packages installed through it are
 -- found (e.g. lgi). If LuaRocks is not installed, do nothing.
 pcall(require, "luarocks.loader")
---Dependencies
---rofi
---alacritty
---archlinux-logout
---pcmanfm
---
---
---
---
---
+
 -- Standard awesome library
 local gears = require("gears")
 local awful = require("awful")
@@ -54,14 +45,13 @@ end
 
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
-beautiful.init("~/.config/awesome/themes/tilman.lua")
+beautiful.init(gears.filesystem.get_configuration_dir() .. "themes/theme.lua")
 
 -- This is used later as the default terminal and editor to run.
 terminal = "alacritty"
-editor = os.getenv("EDITOR") or "nano"
+editor = os.getenv("EDITOR") or "nvim"
 editor_cmd = terminal .. " -e " .. editor
-filemanager = "pcmanfm"
-logout = "archlinux-logout"
+roficmd = "rofi -show drun"
 
 -- Default modkey.
 -- Usually, Mod4 is the key with a logo between Control and Alt.
@@ -72,7 +62,7 @@ modkey = "Mod4"
 
 -- Table of layouts to cover with awful.layout.inc, order matters.
 awful.layout.layouts = {
-    --awful.layout.suit.floating,
+--    awful.layout.suit.floating,
     awful.layout.suit.spiral,
     awful.layout.suit.tile,
     awful.layout.suit.tile.left,
@@ -287,15 +277,11 @@ globalkeys = gears.table.join(
     -- Standard program
     awful.key({ modkey,           }, "Return", function () awful.spawn(terminal) end,
               {description = "open a terminal", group = "launcher"}),
-    awful.key({ modkey, "Shift"   }, "d", function () awful.spawn("rofi -show drun") end,
-              {description = "open a terminal", group = "launcher"}),
-    awful.key({ modkey,           }, "x", function () awful.spawn(logout) end,
-              {description = "open a terminal", group = "launcher"}),
-    awful.key({ modkey, "Shift"   }, "Return", function () awful.spawn(filemanager) end,
-              {description = "PCmanFm", group = "launcher"}),
-    awful.key({ modkey, "Shift" }, "r", awesome.restart,
+   awful.key({ modkey, "Shift"   }, "s", function () awful.spawn("xfce4-screenshooter") end,
+              {description = "take a screenshot", group = "launcher"}),
+   awful.key({ modkey, "Control" }, "r", awesome.restart,
               {description = "reload awesome", group = "awesome"}),
-    awful.key({ modkey, "Control"   }, "q", awesome.quit,
+    awful.key({ modkey, "Shift"   }, "q", awesome.quit,
               {description = "quit awesome", group = "awesome"}),
 
     awful.key({ modkey,           }, "l",     function () awful.tag.incmwfact( 0.05)          end,
@@ -328,10 +314,10 @@ globalkeys = gears.table.join(
               {description = "restore minimized", group = "client"}),
 
     -- Prompt
-    awful.key({ modkey },            "r",     function () awful.screen.focused().mypromptbox:run() end,
+    awful.key({ modkey, "Shift" },            "d",     function () awful.spawn(roficmd) end,
               {description = "run prompt", group = "launcher"}),
 
-    awful.key({ modkey, "Shift" }, "x",
+    awful.key({ modkey }, "x",
               function ()
                   awful.prompt.run {
                     prompt       = "Run Lua code: ",
@@ -580,7 +566,9 @@ client.connect_signal("focus", function(c) c.border_color = beautiful.border_foc
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}
 --
---
--- Autostart
---
-awful.spawn.with_shell("~/.config/awesome/autostart.sh")
+-- Autostart Applications
+awful.spawn.with_shell("~/.fehbg")
+
+
+-- Gaps
+beautiful.useless_gap = 5
